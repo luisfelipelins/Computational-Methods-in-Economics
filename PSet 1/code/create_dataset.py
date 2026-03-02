@@ -88,7 +88,33 @@ def calc_expected_prize(final_df):
     
     return exp_prize
     
+def create_raw_ticket_price():
+    '''
+    Creates and saves the raw_ticket_price dataset. It's based on information
+    from news website Poder360 and other sources. Further information on the documentation
+
+    Returns
+    -------
+    raw_ticket_price : pandas.Series
+        Series containing the raw ticket prize readjustment dates.
+
+    '''
     
+    raw_ticket_price: dict      = {dt(year=2009,month=6,day=1)  :1.75,
+                                   dt(year=2009,month=9,day=6)  :2.00,
+                                   dt(year=2014,month=5,day=10) :2.50,
+                                   dt(year=2015,month=5,day=24) :3.50,
+                                   dt(year=2019,month=11,day=10):4.50,
+                                   dt(year=2023,month=5,day=3)  :5.00,
+                                   dt(year=2025,month=7,day=9)  :6.00}
+    raw_ticket_price: pd.Series = pd.Series(raw_ticket_price).reset_index()
+    
+    raw_ticket_price.columns    = ['contest_date','price']
+    
+    raw_ticket_price.to_csv(DATA_RAW / 'raw_ticket_price.csv')
+    
+    return raw_ticket_price
+            
     
 def treat_datasets(raw_results,raw_ticket_price):
     '''
@@ -138,19 +164,9 @@ def treat_datasets(raw_results,raw_ticket_price):
     
     ## -- Treating unit ticket price data -- ##
     
-    # Renaming and keeping only the desired columns
-    renamer_dict: dict         = {'anúncio'                                   :'contest_date',
-                                  'valor da aposta única da Mega-Sena (em R$)':'price'}
-    ticket_price: pd.DataFrame = raw_ticket_price.rename(columns=renamer_dict)[list(renamer_dict.values())]
-    
-    # Adjusting colum formatting
-    ticket_price['price']        = pd.to_numeric(ticket_price['price'].str.replace(',','.'))
-    ticket_price['contest_date'] = pd.to_datetime(ticket_price['contest_date'].str.replace('mai','may'), format = '%d.%b.%Y')
+    ticket_price: pd.DataFrame   = raw_ticket_price.copy()
     ticket_price                 = ticket_price.set_index('contest_date')
     
-    # Manually inputting prices before, check documentation for more info
-    ticket_price.loc[dt(year=2009,month=9,day=6)]      = 2
-    ticket_price.loc[dt(year=2009,month=6,day=1)]      = 1.75
     ticket_price.loc[results['contest_date'].iloc[-1]] = np.nan
     
     # Resampling values, to make a daily series of ticket prices
@@ -186,6 +202,6 @@ def treat_datasets(raw_results,raw_ticket_price):
 if __name__ == '__main__':
     results_url      = 'https://servicebus3.caixa.gov.br/portaldeloterias/api/resultados/download?modalidade=Mega-Sena'
     raw_results      = download_results_data(results_url)
-    raw_ticket_price = pd.read_csv(DATA_RAW / 'raw_ticket_prices.csv')
+    raw_ticket_price = create_raw_ticket_price()
     
     treat_datasets(raw_results,raw_ticket_price)
