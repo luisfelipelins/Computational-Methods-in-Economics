@@ -1,4 +1,4 @@
 # Ignore the virtual environment and data for PSet 1
 PSet 1/venv/
 PSet 1/data/
-PSet 1/output/
+PSet 1/outputs/
