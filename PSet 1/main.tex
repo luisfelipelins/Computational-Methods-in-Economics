@@ -1,0 +1,153 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor} % Important for r script boxes <============================
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{rotating}
+\usepackage{amsfonts}
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[margin=2cm]{geometry} % Ajuste o valor 2cm para as margens desejadas
+\renewcommand{\baselinestretch}{1.5}
+\setlength{\parskip}{0.3em}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily, language=R}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{xcolor}  % For color
+\usepackage{tcolorbox}  % For boxed content
+\tcbuselibrary{breakable}
+\usepackage{bbm}
+\usepackage{ffcode}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+
+\usepackage[a4paper, left=1in, right=1in, top=1.2in, bottom=1.2in,margin=2cm]{geometry} 
+
+\lstdefinestyle{DOS}
+{
+    backgroundcolor=\color{black},
+    basicstyle=\scriptsize\color{white}\ttfamily
+}
+
+\lstdefinestyle{R}
+{
+  language=R,                     % <===================================
+  basicstyle=\small\ttfamily,
+  numbers=left,                   % where to put the line-numbers
+  backgroundcolor=\color{white},  % choose the background color
+  frame=single,                   % frame around code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text
+  tabsize=1,                      % sets default tabsize
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  keywordstyle=\color{Blue},      % keyword style
+  commentstyle=\color{Green},     % comment style
+  stringstyle=\color{ForestGreen} % string literal style
+}
+
+\title{Computational Methods in Economics - Problem Set 1}
+\author{Luis Felipe Lins}
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+In this problem set, our goal is to calculate the expected return of buying a 6-numbers ticket of the \textit{Mega-Sena}, using historical data on its results and unit ticket price. The repository containing the codes used in this problem set's solution can be found on \href{https://github.com/luisfelipelins/Computational-Methods-in-Economics}{GitHub}. 
+
+This document contains the discussion on the problem set's solution. It's divided as follows. In section \ref{sec:2}, I'll discuss on how the dataset was built, the data sources, and how I've defined the variables used in the analysis. Section \ref{sec:3} will be used to discuss the methods used and the results. Finally, section \ref{sec:4} concludes this problem set.
+
+\section{Constructing the Dataset}
+\label{sec:2}
+
+For this research, I'll use data on two things: (i) \textit{Mega-Sena} results and (ii) 6-number ticket prices. Mega-Sena results are directly captured by download the data from \textit{Loterias Caixa's} website. Its download is automatically done in the function \lstinline|download_results_data|, and saves it to the raw data folder. This dataset contains data on the number of winners and the prize money of those who correctly guess 4, 5 and 6 numbers. It also contains prize estimates for the subsequent contest (which we shift one row below in order to match as the announced prize for the correspondent contest) and the total revenue collected in that contest.
+
+The historical unit price dataset is constructed in the \lstinline|create_raw_ticket_price| function. It manually constructs (and saves in the raw data folder) a dataset with information from multiple news websites. In particular, price data for the period 2014-2026 comes from \textit{Poder360}, while prices for 2009-2014 comes from an article in \textit{Agora SP}. A third article in \textit{Extra Globo} is used to confirm that no adjustments took place between 2009 and 2014. The permanent URL for the articles can be found in the read-me file in the \href{https://github.com/luisfelipelins/Computational-Methods-in-Economics}{GitHub} repository.
+
+With this data, I finish the dataset by creating a few additional variables, as assigned in the problem set's description. First, I find the number of tickets played in a contest by assuming all bets were simple bets (unit tickets with 6 numbers) and dividing the total revenue by the current unit ticket price at that contest's date.
+
+Then, I calculate the expected (realized) prize as follows. If $N_j$ denotes the total number of tickets played (as calculated in the previous paragraph), $G6_j$ denotes the number of tickets winning the 6-number prize, and $Y_j^6$ being the 6-number prize (analogous definitions for 4- and 5-numbers prizes), the expected prize $\mathbb{E}[Y_j]$ for contest $j$ is defined as:
+
+$$
+\mathbb{E}[Y_j]=\frac{G6_j}{N_j}Y_j^6+\frac{G5_j}{N_j}Y_j^5+\frac{G4_j}{N_j}Y_j^4
+$$
+
+Finally, if the price of the unit ticket in draw $j$ is denoted as $p_j$, the return of buying a ticket in that contest can be defined as:
+
+$$
+\frac{\mathbb{E}[Y_j]}{p_j}
+$$
+
+\section{Discussion}
+\label{sec:3}
+
+Now that we have the final dataset, we can continue to the analysis. The first request in the problem set is to calculate the relationship between the prize value announced and the revenue collected. Also, we're requested to calculate the elasticity between these variables. To calculate the elasticity, I run the following regression. Let $y_j$ denote the revenue and $PrizeEst_j$ denote the prize estimate of contest $j$ (in BRL), I regress:
+
+$$
+\ln(y_j)=\alpha+\beta \ln(PrizeEst_j)+\delta d_j+\epsilon_j
+$$
+
+\noindent where $d_j$ is a dummy indicating that the contest was a \textit{Mega-Sena da Viraga} (defined as any contest taking place on the 31st of December or 1st of January, as the date can be both in the data). I also run a similar regression where $y_j$ represents the number of tickets. In both regressions, the coefficient $\beta$ can be interpreted as the elasticity between both variables. The results can be found in the chart below:
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\linewidth]{outputs/chart_item_a.pdf}
+    \vspace{-0.5cm}
+    \caption{\textit{Mega-Sena} Elasticity Estimates between Prize Announcements and Revenue and Ticket Count}
+    \label{fig:placeholder}
+\end{figure}
+
+These estimates suggest that, after controlling for the \textit{Mega-Sena da Virada} effects (which pay the highest prizes), both the revenue and the number of tickers played respond inelastically to the announced prize, although as expected the higher the prize, the higher both the number of individuals playing and the revenue collected are.
+
+We now address the heart of the question we're trying to answer in this problem set: what is the (realized) expected return of playing in the \textit{Mega-Sena} conditional on a given announced prize money ($P_j$)? Basically, what I'll try to do is recover this object:
+
+$$
+\mathbb{E}\left[\frac{\mathbb{E}[Y_j]}{p_j} \vert  P_j\right]
+$$
+
+To do so, I'll try three different methods. First, I'll fit a simple linear regression on the ln of the announced prize money, controlling for a \textit{Mega-Sena da Virada} dummy. The, I'll also perform a ``bin regression". In this attempt, I'll divide the values of prize money in 10 bins corresponding to quantiles, and then I'll calculate the mean inside each bin. 
+
+Finally, I'll also try a non-parametric method using Kernel regressions built in the \lstinline|statsmodels| package. This method tries to approximate the expected value function by local regressions of the ticket return as a function of the prize announced.
+The main advantage of this approach is that it's robust to non-linearities in the underlying function since we're not restricting it to any parametric forms. 
+
+The three estimates can be seen in the chart below:
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=.9\linewidth]{outputs/chart_item_e.pdf}
+    \vspace{-0.5cm}
+    \caption{Estimates of Ticket Return Conditional on the Announced Prize Money}
+    \label{fig:placeholder}
+\end{figure}
+
+For almost all estimates, the return of the unit ticket grows with the announced prize estimate, except for the upper part of the Kernel Regression. Nonetheless, it's possible that these right-end estimates of the non-parametric regression are being biased by the low availability of data. Still, we can see that all estimates lies below the ratio of 1, indicating that regardless of the method used to estimate the conditional expectation of the ticket return, the expected value of playing is negative. 
+
+Finally, even though we can't extrapolate the bin and kernel regressions, it's possible (albeit not recommended!) to extrapolate the linear regression in order to find which value of $\ln(PrizeEst_j)$ would correspond to a positive expected value on the unit ticket. Our estimates suggest that:
+
+$$
+\hat{\frac{\mathbb{E}[Y_j]}{p_j}}=-0.8872+0.0688\ln(PrizeEst_j)-0.0042d_j
+$$
+
+For a regular (non \textit{Mega-Sena da Virada}) contest, this estimate suggests that we'd need $\ln(PrizeEst_j)>27.43$, or an announced prize money greater than 817 trillion BRL! Considering the 11.7 trillions GDP in 2024, it would require almost 70 years to accrue all the wealth needed to pay this prize. 
+
+\section{Conclusion}
+\label{sec:4}
+
+This section concludes the analysis undertaken in problem set 1. In this text, I've offered detail on how I've built the dataset considering the instructions from the problem, and the results of my analysis. Using different methods to estimate the desired conditional expectation, I've found that for all contests ever played in Brazil's \textit{Mega-Sena}, the expected value of buying a ticket was negative. Not only that, but my best estimates in this problem set suggests that, in order to have a positive return on the unit ticket, conditional on the announced prize money, this prize would have to be greater than 817 trillion BRL (157 trillion USD in March, 3rd, 2026 values).
+
+
+\end{document}
