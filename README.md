@@ -4,8 +4,8 @@ This repository contains the codes used as solution to the problem sets of the g
 
 ## Problem Set 1
 
-In this problem set, our goal was to make estimates of the expected returns of Mega-Sena, the mai lottery in Brazil. Detailed instructions can be found in the `PSet1 - Instructions.pdf` file, 
-while the actual solution with the outputs and discussion can be found in the `PSet1 - CME - Luis Felipe Lins.pdf` file (yet to be uploaded).
+In this problem set, our goal was to make estimates of the expected returns of Mega-Sena, the main lottery in Brazil. Detailed instructions can be found in the `PSet1 - Instructions.pdf` file, 
+while the actual solution with the outputs and discussion can be found in the `PSet1 - CME - Luis Felipe Lins.pdf` file (review pending before PSet delivery).
 
 After creating the virtual environment and installing the required packages in the `requirements.txt` file, the codes in this sub-repository should be runned in the following order:
 
