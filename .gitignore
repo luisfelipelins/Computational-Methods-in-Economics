@@ -1,4 +1,6 @@
-# Ignore the virtual environment and data for PSet 1
+# Ignore the virtual environment, outputs and data for PSets
 PSet 1/venv/
 PSet 1/data/
 PSet 1/outputs/
+PSet 2/venv/
+PSet 2/outputs/
