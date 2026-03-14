@@ -2,10 +2,34 @@
 
 This repository contains the codes used as solution to the problem sets of the graduate level subject of Computational Methods in Economics (CME) at FGV-EESP, 2026. These codes are authored by Luis Felipe Lins.
 
+## Creating a venv
+
+In each problem set, we'll have a separate `requirements.txt` file with the packages needed to run the codes and solve those problem sets. In this subsection, I describe in steps how to create a virtual environment, install the packages, and then run the codes inside the virtual environment on Windows (please check [this link](https://www.w3schools.com/python/python_virtualenv.asp) to see the analogous steps in other operating systems).
+
+The first step after cloning the repository is to create the virtual environment. Open your command prompt (or Anaconda prompt, if you prefer), and navigate to the problem set's main folder (to navigate in cmd, check [https://www.geeksforgeeks.org/techtips/change-directories-in-command-prompt/](this) source). Once you're in this folder, run the following command to create the virtual environment:
+
+`python -m venv venv`
+
+Once the virtual environment is created, you need to navigate to the scripts folder inside it:
+
+`cd venv/Script`
+
+Inside the folder, run the command (within the command prompt) to activate the virtual environment:
+
+(*) `activate`
+
+Go back to the problem set's main folder. There you should find the `requirements.txt` file. It contains the packages and the versions of the packages used in the problem set's solution. To install it to the virtual environment, run the command:
+
+`pip install -r requirements.txt`
+
+After `pip` ends installing all the packages, the virtual environment should be ready to run the Python scripts. Go to any problem set's main folder, navigate to the code folder, and run the Python scripts (with the virtual environment active. If you already created the virtual environment, closed the command prompt, just go back to step (*) to activate it and proceed as follows). For example, to run the `config.py` file, just write in the command prompt:
+
+`python config.py`
+
 ## Problem Set 1
 
 In this problem set, our goal was to make estimates of the expected returns of Mega-Sena, the main lottery in Brazil. Detailed instructions can be found in the `PSet1 - Instructions.pdf` file, 
-while the actual solution with the outputs and discussion can be found in the `PSet1 - CME - Luis Felipe Lins.pdf` file (review pending before PSet delivery).
+while the actual solution with the outputs and discussion can be found in the `PSet1 - CME - Luis Felipe Lins.pdf` file.
 
 After creating the virtual environment and installing the required packages in the `requirements.txt` file, the codes in this sub-repository should be runned in the following order:
 
@@ -32,3 +56,29 @@ Ticket price data comes from some news outlets reports on Mega-Sena ticket price
 ### `analysis.py`
 
 Performs the empirical analysis, as proposed in the description of this problem set.
+
+## Problem Set 2
+
+In this problem set, our goal is apply concepts of interpolation and root finding learned in topics 3 and 4 of the CME subject. Detailed instructions can be found in the `PSet2 - Instructions.pdf` file, 
+while the actual solution with the outputs and discussion can be found in the `PSet2 - CME - Luis Felipe Lins.pdf` file.
+
+After creating the virtual environment and installing the required packages in the `requirements.txt` file, the codes in this sub-repository should be runned in the following order:
+
+`config.py` $`\rightarrow`$ `analysis.py`
+
+A brief description of each code's purpose below:
+
+
+### `config.py`
+
+Sets up the full working directory for this problem set.
+
+### `functions.py`
+
+Defines the functions used in the `analysis.py`, such as bisection, secant, Newton-Raphson, etc.
+
+### `analysis.py`
+
+Performs the empirical analysis, as proposed in the description of this problem set.
+
+
