@@ -81,4 +81,27 @@ Defines the functions used in the `analysis.py`, such as bisection, secant, Newt
 
 Performs the empirical analysis, as proposed in the description of this problem set.
 
+## Problem Set 3
+
+In this problem set, our goal is to explore core numerical methods in computational economics: optimization, numerical integration, and numerical differentiation. Detailed instructions can be found in the `PSet3 - Instructions.pdf` file, while the actual solution with the outputs and discussion can be found in the `PSet3 - CME - Luis Felipe Lins.pdf` file.
+
+After creating the virtual environment and installing the required packages in the `requirements.txt` file, the codes in this sub-repository should be runned in the following order:
+
+`config.py` $`\rightarrow`$ `analysis.py`
+
+A brief description of each code's purpose below:
+
+
+### `config.py`
+
+Sets up the full working directory for this problem set.
+
+### `functions.py`
+
+Defines the functions used in the `analysis.py`, such as the objective functions, Gauss-Hermine, Monte Carlo, trapezoind method, etc.
+
+### `analysis.py`
+
+Performs the empirical analysis, as proposed in the description of this problem set.
+
 
