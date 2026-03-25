@@ -1,0 +1,343 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[margin=2cm]{geometry}
+\renewcommand{\baselinestretch}{1.5}
+\setlength{\parskip}{0.3em}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+% \usepackage{bbm}
+% \usepackage{ffcode}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{caption}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Problem Set 3},
+    pdfpagemode=FullScreen,
+}
+
+\lstdefinestyle{R}
+{
+  language=R,
+  basicstyle=\small\ttfamily,
+  numbers=left,
+  backgroundcolor=\color{white},
+  frame=single,
+  rulecolor=\color{black},
+  tabsize=1,
+  breaklines=true,
+  breakatwhitespace=false,
+  keywordstyle=\color{blue},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{red!60!black}
+}
+
+\title{Computational Methods in Economics - Problem Set 3}
+\author{Luis Felipe Lins}
+\date{March 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+
+In this problem set, we explore core numerical methods in computational economics: optimization, numerical integration, and numerical differentiation. The repository containing the codes used in this problem set's solution can be found on \href{https://github.com/luisfelipelins/Computational-Methods-in-Economics}{GitHub}.
+
+
+\section{Question 1}
+\label{sec:q1}
+
+We want to minimize $f(x) = x\sin(5x)$ over the interval $[0,10]$, using three different optimization methods with absolute and relative tolerances of $10^{-4}$.
+
+\subsection*{Item (a)}
+
+I chose the following three methods: Nelder-Mead (a derivative-free simplex method), L-BFGS-B (a quasi-Newton method that supports bounds), and Differential Evolution (a global optimizer from the family of evolutionary algorithms). All three are called through \lstinline|scipy.optimize|, with starting point $x_0 = 0$ for the local methods. The results are:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lrr}
+    \toprule
+    Method & $x^*$ & $f(x^*)$ \\
+    \midrule
+    Nelder-Mead            & 0.0000 & 0.0000 \\
+    L-BFGS-B               & 0.0000 & 0.0000 \\
+    Differential Evolution & 9.7430 & $-9.7410$ \\
+    \bottomrule
+\end{tabular}
+\caption{Optimization results for $f(x) = x\sin(5x)$ on $[0,10]$.}
+\label{tab:q1_methods}
+\end{table}
+
+Both local methods converge to $x^* = 0$, which is a local minimum (and the boundary of the interval). Differential Evolution, being a global optimizer, successfully finds the global minimum at $x^* \approx 9.743$, with $f(x^*) \approx -9.741$.
+
+Figure \ref{fig:q1_function} illustrates why local methods struggle: the function has many local minima due to the oscillatory nature of $\sin(5x)$, and the amplitude of the oscillations grows with $x$. Starting at $x_0 = 0$, the local methods have no reason to ``jump'' past the first few oscillations and get stuck immediately.
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.85\linewidth]{outputs/chart_q1_function.pdf}
+    \vspace{-0.3cm}
+    \caption{$f(x) = x\sin(5x)$ on $[0,10]$ with the global minimum marked in red.}
+    \label{fig:q1_function}
+\end{figure}
+
+\subsection*{Item (b)}
+
+To investigate how the solution depends on the starting point and the algorithm, I ran both Nelder-Mead and L-BFGS-B from 50 evenly spaced starting points across $[0,10]$, and plotted the resulting $f(x^*)$ for each starting point.
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.85\linewidth]{outputs/chart_q1_starting_points.pdf}
+    \vspace{-0.3cm}
+    \caption{Optimum $f(x^*)$ as a function of the starting point $x_0$ for each method}
+    \label{fig:q1_starting}
+\end{figure}
+
+The results in Figure \ref{fig:q1_starting} make the point clearly: both local methods are highly sensitive to the starting point, converging to different local minima depending on where they start. Neither method consistently finds the global optimum. L-BFGS-B and Nelder-Mead follow broadly similar patterns, though they occasionally converge to different local minima for the same $x_0$, reflecting differences in how the two algorithms navigate the landscape (gradient-based steps vs.\ simplex reflections). Differential Evolution, by contrast, does not require a starting point and explores the entire domain, reliably finding the global minimum.
+
+
+\section{Question 2}
+\label{sec:q2}
+
+We are given the function:
+$$
+f(x_1, x_2; \theta) = \theta_1 x_1 + \theta_2 \exp(-x_2^2) + \theta_3 \log(1 + |x_2|) + \theta_4 x_1^{x_2}
+$$
+
+\noindent and four observed values $y_1 = 43.614$, $y_2 = 563.694$, $y_3 = 43.230$, $y_4 = 23.130$ at known input pairs. The goal is to recover the unknown parameter vector $\theta_0 \in \mathbb{R}^4$ by minimizing the sum of squared residuals:
+$$
+g(\theta) = \sum_{k=1}^{4} \left( f(x_1^{(k)}, x_2^{(k)}; \theta) - y_k \right)^2
+$$
+
+\subsection*{Item (b)}
+
+As a sanity check, evaluating $g$ at $\theta_1 = (0,0,0,0)$ gives $g(\theta_1) = 322056.94$. This is expected: with all parameters set to zero, the model predicts zero for all observations, so $g$ simply returns the sum of squared observed values.
+
+\subsection*{Items (c-e)}
+
+I minimize $g(\theta)$ using Nelder-Mead with starting point $\theta_0 = (1,1,1,1)$ and tolerances \lstinline|xatol| = \lstinline|fatol| = $10^{-8}$. At each iteration, a \lstinline|CallbackRecorder| object stores the current parameter vector $\theta_i$ and the value $g(\theta_i)$.
+
+The optimizer converges after 412 iterations to:
+$$
+\hat{\theta} = (1.80, \; 2.40, \; 10.00, \; 34.00)
+$$
+
+\noindent with $g(\hat{\theta}) \approx 0$, indicating an essentially perfect fit to the four observations. This makes sense: we have four equations and four unknowns, so the system is exactly identified and we should expect an exact solution to exist.
+
+Figure \ref{fig:q2_convergence} shows the convergence of $g(\theta_i)$ across iterations. The objective function drops rapidly in the first few iterations and then slowly approaches zero as the algorithm fine-tunes the parameters. Figures \ref{fig:q2_theta1} to \ref{fig:q2_theta4} show the path of each individual parameter across iterations.
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.85\linewidth]{outputs/chart_q2_convergence.pdf}
+    \vspace{-0.3cm}
+    \caption{Convergence of $g(\theta_i)$ across Nelder-Mead iterations.}
+    \label{fig:q2_convergence}
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{outputs/chart_q2_theta1.pdf}
+        \caption{$\theta_1$}
+        \label{fig:q2_theta1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{outputs/chart_q2_theta2.pdf}
+        \caption{$\theta_2$}
+        \label{fig:q2_theta2}
+    \end{subfigure}
+    
+    \vspace{0.3cm}
+    
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{outputs/chart_q2_theta3.pdf}
+        \caption{$\theta_3$}
+        \label{fig:q2_theta3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{outputs/chart_q2_theta4.pdf}
+        \caption{$\theta_4$}
+        \label{fig:q2_theta4}
+    \end{subfigure}
+    \caption{Parameter paths $\theta_1, \ldots, \theta_4$ across Nelder-Mead iterations.}
+    \label{fig:q2_thetas}
+\end{figure}
+
+
+\section{Question 3}
+\label{sec:q3}
+
+Suppose $X, Y {\sim} N(0,1)$ and $u = \max\{X, Y\}$. We want to compute $\mathbb{E}[u]$ using two different numerical integration methods. The analytical solution is known to be $\mathbb{E}[\max\{X,Y\}] = 1/\sqrt{\pi} \approx 0.5642$.
+
+\subsection*{Item (a)}
+
+The key idea is that the standard normal density can be connected to the Gauss-Hermite weight function. With the substitution $x = \sqrt{2}\,t$, we get:
+$$
+\int_{-\infty}^{\infty} h(x) \frac{1}{\sqrt{2\pi}} e^{-x^2/2} \, dx = \frac{1}{\sqrt{\pi}} \int_{-\infty}^{\infty} h(\sqrt{2}\,t) \, e^{-t^2} \, dt
+$$
+
+\noindent which is exactly the form that Gauss-Hermite quadrature approximates. For a two-dimensional integral (since we need both $X$ and $Y$), we use the product rule: the 2D integral becomes a double sum over the tensor product of the 1D nodes and weights.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{rrr}
+    \toprule
+    Nodes ($n$) & $\hat{\mathbb{E}}[\max\{X,Y\}]$ & $|\text{error}|$ \\
+    \midrule
+    5   & 0.5184 & $4.58 \times 10^{-2}$ \\
+    10  & 0.5413 & $2.29 \times 10^{-2}$ \\
+    20  & 0.5527 & $1.15 \times 10^{-2}$ \\
+    50  & 0.5596 & $4.63 \times 10^{-3}$ \\
+    100 & 0.5619 & $2.32 \times 10^{-3}$ \\
+    \bottomrule
+\end{tabular}
+\caption{Gauss-Hermite quadrature estimates of $\mathbb{E}[\max\{X,Y\}]$ by number of nodes per dimension.}
+\label{tab:q3_gh}
+\end{table}
+
+The convergence is notably slow: even with 100 nodes per dimension (10,000 total evaluation points), the error is still around $2.3 \times 10^{-3}$. This is because $\max\{x, y\}$ has a kink along the line $x = y$, which breaks the smoothness that Gauss-Hermite quadrature relies on for fast polynomial convergence.
+
+\subsection*{Item (b)}
+
+The Monte Carlo approach is straightforward: draw $n$ pairs $(X_i, Y_i)$ from $N(0,1)$ and compute the sample average of $\max\{X_i, Y_i\}$.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{rrr}
+    \toprule
+    Draws ($n$) & $\hat{\mathbb{E}}[\max\{X,Y\}]$ & $|\text{error}|$ \\
+    \midrule
+    1,000     & 0.5139 & $5.03 \times 10^{-2}$ \\
+    10,000    & 0.5749 & $1.07 \times 10^{-2}$ \\
+    100,000   & 0.5653 & $1.07 \times 10^{-3}$ \\
+    1,000,000 & 0.5643 & $8.45 \times 10^{-5}$ \\
+    \bottomrule
+\end{tabular}
+\caption{Monte Carlo estimates of $\mathbb{E}[\max\{X,Y\}]$ by number of draws.}
+\label{tab:q3_mc}
+\end{table}
+
+With 1 million draws, the error is already below $10^{-4}$, substantially beating the Gauss-Hermite estimate at 100 nodes. This illustrates the trade-off that deterministic quadrature methods converge faster for smooth integrands, but Monte Carlo is more robust to non-smooth functions and, importantly, does not suffer from the curse of dimensionality, making it the method of choice for higher-dimensional integration problems common in economics.
+
+
+\section{Question 4}
+\label{sec:q4}
+
+We compute the integrals of three functions over $[0,1]$ using the trapezoid rule with $n = 3, 5, 10, 15, 20$ nodes.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lrrrrr}
+    \toprule
+    & $n=3$ & $n=5$ & $n=10$ & $n=15$ & $n=20$ \\
+    \midrule
+    $\int_0^1 x \, dx = 0.5$ & 0.5000 & 0.5000 & 0.5000 & 0.5000 & 0.5000 \\
+    $\int_0^1 x\sin(x) \, dx \approx 0.3012$ & 0.3302 & 0.3084 & 0.3026 & 0.3018 & 0.3015 \\
+    $\int_0^1 \sqrt{1-x^2} \, dx = \pi/4 \approx 0.7854$  & 0.6830 & 0.7489 & 0.7745 & 0.7798 & 0.7819 \\
+    \bottomrule
+\end{tabular}
+\caption{Trapezoid rule approximations by number of nodes.}
+\label{tab:q4}
+\end{table}
+
+A few observations. First, the integral $\int_0^1 x \, dx$ is computed exactly for all $n$ since the trapezoid rule is exact for linear functions (the ``trapezoids'' fit the function perfectly). Second, $\int_0^1 x\sin(x) \, dx$ converges quickly: by $n = 20$ the error is on the order of $10^{-4}$. Third, $\int_0^1 \sqrt{1-x^2} \, dx$ converges more slowly. This happens because $\sqrt{1-x^2}$ has an infinite derivative at $x = 1$ (vertical tangent), which degrades the accuracy of the trapezoid rule near the boundary.
+
+
+\section{Question 5}
+\label{sec:q5}
+
+We compute the derivative of three functions at specified points using 2-point and 4-point centered differences, for step sizes $h = 0.001, 0.005, 0.01, 0.05$.
+
+The 2-point centred difference formula is $f'(x) \approx \frac{f(x+h) - f(x-h)}{2h}$. 
+
+The 4-point formula is $f'(x) \approx \frac{-f(x+2h) + 8f(x+h) - 8f(x-h) + f(x-2h)}{12h}$.
+
+\subsection*{Item (a): $f(x) = x^2$ at $x = 5$}
+
+The analytical derivative is $f'(5) = 10$. Both methods produce errors at the level of machine precision, regardless of $h$:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{rcc}
+    \toprule
+    $h$ & $|\text{error}|$ (2-pt) & $|\text{error}|$ (4-pt) \\
+    \midrule
+    0.001 & $3.34 \times 10^{-12}$ & $4.52 \times 10^{-12}$ \\
+    0.005 & $2.13 \times 10^{-13}$ & $2.13 \times 10^{-13}$ \\
+    0.010 & $2.13 \times 10^{-13}$ & $2.72 \times 10^{-13}$ \\
+    0.050 & $3.55 \times 10^{-14}$ & $2.49 \times 10^{-14}$ \\
+    \bottomrule
+\end{tabular}
+\caption{Absolute errors for $f'(x) = 2x$ at $x=5$.}
+\label{tab:q5_x2}
+\end{table}
+
+This is because $x^2$ is a polynomial of degree 2, and the 2-point centered difference formula is exact for polynomials up to degree 2. The residual errors are a result of floating-point arithmetic.
+
+\subsection*{Item (b): $f(x) = \log(x)$ at $x = 10$}
+
+The analytical derivative is $f'(10) = 0.1$. Here we can clearly see the difference in convergence rates between the two methods:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{rcc}
+    \toprule
+    $h$ & $|\text{error}|$ (2-pt) & $|\text{error}|$ (4-pt) \\
+    \midrule
+    0.001 & $3.33 \times 10^{-10}$ & $1.59 \times 10^{-13}$ \\
+    0.005 & $8.33 \times 10^{-9}$  & $4.06 \times 10^{-14}$ \\
+    0.010 & $3.33 \times 10^{-8}$  & $7.39 \times 10^{-14}$ \\
+    0.050 & $8.33 \times 10^{-7}$  & $5.00 \times 10^{-11}$ \\
+    \bottomrule
+\end{tabular}
+\caption{Absolute errors for $f'(x) = 1/x$ at $x=10$.}
+\label{tab:q5_log}
+\end{table}
+
+The 2-point errors decrease as we reduce $h$. The 4-point errors are dramatically smaller, mostly near machine precision for all values of $h$, albeit lower values produce lower errors. Starting at a very low $h$ (0.001), the error starts to increase, probably because of machine precision.
+
+\subsection*{Item (c): $f(x) = x\sin(x)$ at $x = 1$}
+
+The analytical derivative is $f'(1) = \sin(1) + \cos(1) \approx 1.3818$. The pattern is similar to item (b):
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{rcc}
+    \toprule
+    $h$ & $|\text{error}|$ (2-pt) & $|\text{error}|$ (4-pt) \\
+    \midrule
+    0.001 & $5.11 \times 10^{-7}$  & $3.28 \times 10^{-13}$ \\
+    0.005 & $1.28 \times 10^{-5}$  & $9.89 \times 10^{-11}$ \\
+    0.010 & $5.11 \times 10^{-5}$  & $1.58 \times 10^{-9}$  \\
+    0.050 & $1.28 \times 10^{-3}$  & $9.89 \times 10^{-7}$  \\
+    \bottomrule
+\end{tabular}
+\caption{Absolute errors for $f'(x) = \sin(x) + x\cos(x)$ at $x=1$.}
+\label{tab:q5_xsinx}
+\end{table}
+
+The 4-point method achieves errors several orders of magnitude smaller than the 2-point method for the same step size.
+
+\subsection*{Item (d): Comparison with the analytical solution}
+
+Across all three functions, the results confirm the theoretical convergence rates. In practice, this means that with a moderate step size like $h = 0.01$, the 4-point method already achieves errors near machine precision for smooth functions, while the 2-point method still has errors of order $10^{-8}$ to $10^{-5}$.
+
+The one exception is $f(x) = x^2$, where both methods are essentially exact because the higher-order derivatives that drive the truncation error are zero. This serves as a useful sanity check for the implementation.
+
+
+\end{document}
