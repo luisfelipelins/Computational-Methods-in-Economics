@@ -1,0 +1,441 @@
+\documentclass{article}
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{crimson}
+
+% Geometry and formatting
+\usepackage[margin=1.5cm]{geometry}
+\renewcommand{\baselinestretch}{1.5}
+\setlength{\parskip}{0.3em}
+
+% Math and symbols
+\usepackage{amsmath, amsfonts, amssymb, mathtools, amsthm, bbm}
+
+% Figures and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{rotating}
+\usepackage{array}
+
+% Listings and code formatting
+\usepackage{listings}
+\usepackage{ffcode}
+
+% Colours and boxes
+\usepackage[dvipsnames, usenames]{xcolor} % Include both color and hyperref support
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+
+% Text and referencing
+\usepackage{enumitem}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+% \hypersetup{
+%     colorlinks=blue,
+%     linkcolor=blue,
+%     filecolor=magenta,
+%     urlcolor=cyan,
+%     pdftitle={Overleaf Example},
+%     pdfpagemode=FullScreen,
+% }
+\usepackage{csquotes}
+
+% Diagrams
+\usepackage{tikz}
+\usepackage{pifont}
+
+% Bibliography
+\usepackage[round]{natbib}
+\bibliographystyle{plainnat}
+
+\newtheorem{theorem}{Claim}
+
+\lstdefinestyle{DOS}
+{
+    backgroundcolor=\color{black},
+    basicstyle=\scriptsize\color{white}\ttfamily
+}
+
+\lstdefinestyle{R}
+{
+  language=R,                     % <===================================
+  basicstyle=\small\ttfamily,
+  numbers=left,                   % where to put the line-numbers
+  backgroundcolor=\color{white},  % choose the background color
+  frame=single,                   % frame around code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text
+  tabsize=1,                      % sets default tabsize
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  keywordstyle=\color{Blue},      % keyword style
+  commentstyle=\color{Green},     % comment style
+  stringstyle=\color{ForestGreen} % string literal style
+}
+
+\title{The Redistributive Aspects of Trade Barriers \\ \large CME - Research Project}
+\author{Luis Felipe Lins}
+\date{April 2026}
+
+\begin{document}
+
+\maketitle
+
+\vspace{-1cm}
+\section{Introduction and Motivation}
+\vspace{-0.3cm}
+
+On April 8, 2025, high-ranking politicians and business leaders gathered for the annual NRCC dinner, where keynote speaker President Donald Trump shared his views on the state of the U.S. economy and the policies his administration is pursuing. About 30 minutes into the speech, Trump said that he was proud to be a president for workers, not outsourcers, one who stands up for Main Street, not Wall Street.
+
+Despite broad evidence of the gains from trade, President Trump argues that these  gains are unevenly distributed. This narrative can be summarised as follows: (i) US  firms offshore production tasks to lower-wage countries in order to increase profits; (ii) demand for American jobs falls, depressing wages and increasing unemployment; (iii) higher tariffs make offshoring less profitable, inducing American firms to bring jobs back to the United States. In short, even in the presence of gains from trade or offshoring, there exists an underlying ``capitalists vs.\ workers'' distributive question, that is, an efficiency versus distribution trade-off.
+
+In light of this narrative, one could rationalise President Trump's trade policy as a distributive policy. However, even if this narrative were true, it is only a partial equilibrium argument. In other words, increasing tariffs does not affect only firms' profits, but also overall output, productivity, and welfare. Thus, we ask: what are the actual general-equilibrium redistributive implications of higher trade barriers preventing offshoring and the relocation of jobs abroad?
+
+I propose building a quantitative general equilibrium model where firms can offshore production tasks to a country with lower wages. Based on \cite{grossman2008}, two types of goods are produced using a continuum of tasks requiring low-skilled labour, high-skilled labour, and capital. We assume that low-skilled tasks can be offshored. On the household side, we introduce heterogeneity through idiosyncratic shocks and incomplete markets, as in \cite{aiyagari1994}. To insure against adverse shocks, households save, meaning some hold more assets and earn more capital income than others. Aggregate capital supply therefore depends on the individual savings decisions of different households. In the next section, I describe the model in more detail.
+
+\vspace{-0.6cm}
+\section{The Model}
+\vspace{-0.3cm}
+
+\subsection{Firms}
+
+As in \cite{grossman2008}, production occurs through tasks, and each task requires only one factor type as input. Each factor consists of a unit continuum of tasks. There are three production factors: low-skilled labour ($L$), high-skilled labour ($H$), and capital ($K$). Tasks are indexed by $i$.
+
+There are two goods with different factor intensities: $X$ ($H$-intensive) and $Y$ ($L$-intensive). Both goods share the same (symmetric) $K$-intensity. We define the price of good $X$ as the numeraire and the price of good $Y$ as $p$. To model complementarity between inputs, we assume a Cobb-Douglas technology with $\alpha_x > \alpha_y$:
+
+\vspace{-0.4cm}
+$$
+F_j(S_{Lj},S_{Hj},S_{Kj}) = S_{Lj}^{1-\alpha_j-\gamma}\cdot S_{Hj}^{\alpha_j}\cdot S_{Kj}^\gamma, \qquad \text{for $j\in\{X,Y\}$}
+$$
+
+\noindent where $S_{fj}$ denotes the bundle of tasks of factor type $f$ in sector $j$.
+
+We assume that $L$-tasks are offshorable at a cost. Each $L$-task can be produced domestically with 1 unit of domestic labour at wage $w$, or with $\beta t(i)$ units of foreign labour at foreign wage $w^*$. $\beta$ is a technology parameter representing the overall cost of offshoring, and we treat it as the policy variable in our model.
+
+We rank tasks from lowest to highest offshoring cost, assuming $t:[0,1]\rightarrow\mathbb{R}_{\geq 0}$ is a continuous and differentiable function denoting the cost of offshoring, with $t(i)=i^\theta$ and $\theta\geq 0$. We define the marginal task $I$ by $w=w^*\beta t(I)$. For each unit $a_{Lj}$ of $L$-tasks hired, $1-I$ are performed domestically and $I$ are offshored. As a result, the unit cost of labour is $a_{Lj}w\Omega(I)$, where $\Omega(I)=(1-I)+\frac{I}{\theta+1}$.
+
+The Cobb-Douglas technology admits substitution between tasks, so optimal task choice follows from a cost-minimisation problem: $\min_{a_{Lj},a_{Hj},a_{Kj}} wa_{Lj}\Omega(I)+sa_{Hj}+ra_{Kj} \text{ subject to } F_j(a_{Lj},a_{Hj},a_{Kj})=1$. Assuming a competitive economy where prices equal marginal cost, we impose zero-profit conditions to pin down equilibrium:
+
+\vspace{-0.2cm}
+\begin{equation}
+    1=\left(\frac{w\Omega(I)}{1-\alpha_x-\gamma}\right)^{1-\alpha_x-\gamma}\cdot \left(\frac{s}{\alpha_x}\right)^{\alpha_x}\cdot \left(\frac{r}{\gamma}\right)^\gamma \qquad \text{ and } \qquad p=\left(\frac{w\Omega(I)}{1-\alpha_y-\gamma}\right)^{1-\alpha_y-\gamma}\cdot \left(\frac{s}{\alpha_y}\right)^{\alpha_y}\cdot \left(\frac{r}{\gamma}\right)^\gamma \tag{ZP}
+\end{equation}
+
+We also impose market clearing conditions. Given quantities produced $X$ and $Y$ and factor supplies $L$, $H$, $K$ taken as given by firms, market clearing implies:
+
+\begin{equation}
+    \frac{(1-\alpha_x-\gamma) X + p (1-\alpha_y-\gamma) Y}{w\Omega(I)} = \frac{L}{1-I}, \qquad \frac{\alpha_x X + p \alpha_y Y}{s} = H \qquad \text{ and } \qquad  \frac{\gamma X + p \gamma Y}{r} = K \tag{MC}
+\end{equation}
+
+
+\vspace{-0.7cm}
+\subsection{Households}
+
+The Home country is populated by a mass $M$ of households that earn utility from consuming a basket of goods. Each household inelastically supplies one unit of labour, which can be low- or high-skilled. While in $L$, the household earns $w$; when in $H$, it earns $s$. Households face shocks to both their labour supply type ($f$) and their labour productivity ($z$), with the latter following an AR(1). To insure against adverse shocks, households may acquire assets $a$ (capital) to earn capital income.
+
+Households have identical preferences and earn utility from consuming both $X$ and $Y$ according to a CRRA transform of a Cobb-Douglas: $U(c_x,c_y)=\frac{(c_x^\eta c_y^{1-\eta})^{1-\sigma}}{1-\sigma}$. Given total expenditure $C$, the household solves $\max_{c_x,c_y} U(c_x,c_y) \text{ subject to } c_x+pc_y=C$, yielding $c_x^*=\eta C$ and $c_y^*=(1-\eta)C/p$. Substituting back into the utility function gives the indirect utility function $V(C,p)=\frac{[\psi(p) C]^{1-\sigma}}{1-\sigma}$, where $\psi(p):=\eta^\eta \left(\frac{1-\eta}{p}\right)^{1-\eta}$. This allows us to write the intertemporal utility function in terms of total consumption only, reducing the household's choice from two control variables to one (since $c_x$ and $c_y$ follow from $C$, $p$, and $\eta$). The household's problem becomes:
+
+\vspace{-0.2cm}
+\begin{equation}
+\max_{\{C_{t,i}\}_{t=0}^\infty} \mathbb{E}\left[\sum_{t=0}^\infty \delta^t\frac{[\psi (p_t)C_{t,i}]^{1-\sigma}}{1-\sigma}\right] \quad \text{s.t.} \quad C_{t,i}+a_{t+1,i}=(1+r_t) a_{t,i}+z_{t,i}(\mathbbm{1}\{f=L\} w_t+\mathbbm{1}\{f=H\}s_t) \tag{HP}
+\end{equation}
+
+This problem can equivalently be written in recursive form:
+
+\vspace{-0.4cm}
+$$
+V(a,f,z)=\max_{a'}\left\{\frac{[\psi(p)\cdot((1+r)a+z(\mathbbm{1}\{f=L\} w+\mathbbm{1}\{f=H\}s)-a')]^{1-\sigma}}{1-\sigma}+\mathbb{E}_{z=z_j,f=f_j}[V(a',f',z')]\right\}
+$$
+
+Let $\lambda(a,f,z)$ be the distribution of households in state $(a,f,z)$. The goods and factor market clearing conditions are:
+
+\vspace{-0.8cm}
+\begin{align}
+    \text{\textbf{Goods: }} J&=\int j d \lambda(a,f,z) \text{, for $j\in\{c_x,c_y\}$ and $J\in\{X,Y\}$} \tag{GMC} \\
+    \text{\textbf{Labour: }} F&=\int z d\lambda(a,f=f_j,z) \text{, for $f_j\in\{l,h\}$ and $F\in\{L/(1-I),H\}$} \tag{LMC} \\
+    \text{\textbf{Capital: }} K&=\int ad\lambda(a,f,z) \tag{AMC}
+\end{align}
+
+\subsection{Recursive Stationary General Equilibrium}
+
+We define the recursive stationary general equilibrium as a vector of prices $w,s,r,p$, a marginal task $I$, factor supplies $L,H,K$, total consumption $C$, goods quantities $X,Y$, policy function $g(a,f,z)$, and stationary distribution $\lambda(a,f,z)$ such that:
+
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Zero-profit conditions (ZP) and the marginal task condition $w=w^*\beta I^\theta$ hold
+    \vspace{-0.2cm}
+    \item Factor markets clear (MC, LMC, and AMC hold)
+    \vspace{-0.2cm}
+    \item Households optimise consumption and goods markets clear: using $c_x^*=\eta C$ and $c_y^*=(1-\eta)C/p$, GMC holds
+    \vspace{-0.2cm}
+    \item Households optimise their problem (HP); given prices, the policy function $g(a,f,z)$ solves the value function $V(a,f,z)$, and individual $C$ and $a$ follow from it
+    \vspace{-0.2cm}
+    \item The stationary distribution $\lambda(a,f,z)$ is induced by the endogenous transition matrix
+    \vspace{-0.2cm}
+\end{enumerate}
+
+A full overview of the model is presented in Figure~\ref{fig:diagram}.
+
+\vspace{-0.6cm}
+\section{The Numerical Implementation}
+\vspace{-0.3cm}
+
+In this section, we describe in more detail how we use the numerical methods from the Computational Methods in Economics course to solve the model described in the previous section. The scripts implementing them can be found on \href{https://github.com/luisfelipelins/Computational-Methods-in-Economics}{GitHub}. The two main scripts are \ff{functions.py} (which implements functions used across the model) and \ff{GeneralEquilibrumModel.py} (which defines the model class). The \ff{analysis.py} script uses both to estimate the model and generate outputs.
+
+We begin by describing the overall solution algorithm. Let $v_z$ denote the stationary distribution of productivity states $z$ and $v_L$ the stationary share of $L$ workers. Since the processes for $f$ and $z$ are exogenous, both $v_z$ and $v_L$ can be recovered using \ff{calculate\_} \ff{stationary\_distribution} in \ff{functions.py}. The algorithm is as follows:
+
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Outer loop over $r$; inner loop over $p$. Initialise with a guess for both
+    \vspace{-0.2cm}
+    \item Given $I$, recover $w$ and $s$; find the triplet $(w,s,I)$ by root-finding the zero-profit condition in $I$
+    \vspace{-0.2cm}
+    \item Given $r,p,w$, and $s$, solve the household problem and find policy functions $a'(z,f,a)$ and $c(z,f,a)$
+    \vspace{-0.2cm}
+    \item Using $a'(z,f,a)$ and the transition matrices for $z$ and $f$, compute the stationary distribution $\lambda(z,f,a)$
+    \vspace{-0.2cm}
+    \item Check whether labour markets clear; if not, adjust $p$ based on excess demand for $L$
+    \vspace{-0.2cm}
+    \item If they do, check whether the capital market clears; if not, adjust $r$
+    \vspace{-0.2cm}
+    \item Repeat until both markets clear
+    \vspace{-0.2cm}
+\end{enumerate}
+
+We now describe in more detail how we implement this algorithm. \ff{GeneralEquilibrumModel.py} defines the model class, where a model is initialised by passing the parameters. There are two types of parameters: model parameters (intrinsic to the model, such as $\alpha_x$) and calibration parameters (related to the numerical implementation, such as the number of grid points in the discretisation). A full list with descriptions and values is provided in Tables~\ref{tab:model_parameters} and~\ref{tab:calib_parameters}.
+
+The \ff{GeneralEquilibrumModel} object has several methods, many of which wrap other methods. For example, \ff{solve\_firm\_side} implements step 2 and \ff{solve\_household\_side} implements steps 3--4, given $p$ and $r$. \ff{inner\_loop\_solver} wraps both, implementing steps 2--5 given only $r$. The method solving the full algorithm (steps 1--7) is \ff{outer\_loop\_solver}, which requires no arguments and uses the parameters passed when creating the model object. Within each iteration, it solves the model given $r$ and $p$ (steps 2--4), then checks whether labour markets clear, and subsequently whether capital markets clear.
+
+Step 2 is implemented by \ff{solve\_firm\_side}. Given $p$ and $r$, we solve the system of three equations in three unknowns ($w,s,I$):
+
+\vspace{-0.8cm}
+\begin{align*}
+ w&=w^*\beta t(I) \tag{RA} \\[4pt]
+ 1&=\left(\frac{w\Omega(I)}{1-\alpha_x-\gamma}\right)^{1-\alpha_x-\gamma}\cdot \left(\frac{s}{\alpha_x}\right)^{\alpha_x}\cdot \left(\frac{r}{\gamma}\right)^\gamma \tag{RB} \\[4pt]
+ p&=\left(\frac{w\Omega(I)}{1-\alpha_y-\gamma}\right)^{1-\alpha_y-\gamma}\cdot \left(\frac{s}{\alpha_y}\right)^{\alpha_y}\cdot \left(\frac{r}{\gamma}\right)^\gamma \tag{RC} \\[4pt]
+\end{align*}
+
+\vspace{-0.9cm}
+Rather than solving this system by substitution or matrix inversion, note that given $I$, we can recover $w$ from (RA) and $s$ from (RB). To verify whether $I$ solves the system, we substitute $(w,s,I)$ into (RC) and check whether it holds; if not, we adjust $I$ until (RC) is satisfied --- by construction, (RA) and (RB) hold throughout. \ff{solve\_firm\_side} does exactly this: it checks whether an interior solution exists, i.e.\ $I\in(0,1)$, and if so applies Brent's method to find the root of (RC).
+
+With $p$ and $r$ (from the inner and outer loops) and $w,s,I$ (derived in step 2), we proceed to step 3 using \ff{solve\_household\_side}. This method first discretises the productivity states $z$: given our AR(1) assumption, we apply Rouwenhorst's method to approximate the process by a Markov transition matrix. We then construct the low- and high-skill transition matrix, which follows a 2-state Markov chain. Next, we discretise the asset grid, with lower bound 0 and upper bound equal to a multiple of $\max\{w,s\}$. Given this grid, we apply value function iteration with Howard's improvement (which accelerates convergence by performing multiple policy evaluation steps between policy improvement steps) to find the optimal savings policy for each state. Recall that each household state is defined by asset holdings, labour type, and productivity, so after discretisation there are \ff{vfi\_N}$\times$\ff{rh\_N}$\times 2$ possible states. The function \ff{model\_vfi} yields policy functions giving the optimal savings and consumption for each state. Step 4 then computes the endogenous stationary distribution by iteratively applying the transition matrix until convergence.\footnote{The eigenvector method could recover this analytically, but since the matrix has dimension \ff{vfi\_N}$\times$\ff{rh\_N}$\times 2$, iterative computation is considerably more efficient.}
+
+With steps 2--4 completed, we verify market clearing for the initial guesses of $p$ and $r$. We first check whether labour markets clear; if not, we adjust $p$. If they do, we check whether the capital market clears; if not, we adjust $r$. In both cases, market clearing residuals are computed as absolute values, and we use \ff{scipy}'s \ff{minimize\_scalar} implementation of Brent's method with bounds. Upon convergence, noting that the current implementation remains sensitive to extreme parameter values, \ff{economy\_statistics} computes summary statistics such as aggregate capital, consumption, and inequality.
+
+\vspace{-0.6cm}
+\section{Results}
+\vspace{-0.3cm}
+
+We begin by building up the model incrementally. Given two types of shocks and a numerical solution, it is easy to lose economic intuition behind the results. We therefore compare four models: (1) a representative-agent model (whose derivation is omitted here, but also relies on numerical methods to solve a system of equations); (2) a model with labour supply type shocks only; (3) a model with productivity shocks only; and (4) a model with both types of shocks.
+
+The results are reported in the tables below. Overall, the results suggest that the narrative holds: the wage gap narrows, and income inequality (measured by the Gini index) decreases across all models, even though in M4 capital remuneration increases. However, in the full model, despite the more equal income distribution, the utility of both low- and high-skilled workers falls. The intuition is that $\beta$ is a technology parameter, so a higher $\beta$ implies a less efficient economy: even though inequality is lower, utility also reflects the decline in total output and the rise in price $p$. As a result, even if the reduction in inequality stems mainly from a narrower wage gap, welfare decreases in this economy.
+
+\vspace{0.5cm}
+
+% Table 1: Labour Market
+\begin{tabular}{l|cccc|cccc|cccc}
+\toprule
+& \multicolumn{4}{c|}{\textcolor{blue}{$I$}} 
+& \multicolumn{4}{c|}{\textcolor{blue}{$w$}} 
+& \multicolumn{4}{c}{\textcolor{blue}{$s$}} \\
+& M1 & M2 & M3 & M4 & M1 & M2 & M3 & M4 & M1 & M2 & M3 & M4 \\
+\midrule
+$\beta=2$ & 13.1\% & 12.0\% & 7.5\% & 13.0\% & 0.471 & 0.450 & 0.357 & 0.468 & 0.772 & 0.794 & 0.871 & 0.809 \\
+$\beta=3$ & 6.2\% & 6.0\% & 3.5\% & 6.3\% & 0.484 & 0.478 & 0.367 & 0.490 & 0.759 & 0.767 & 0.860 & 0.788 \\
+$\Delta\%$ & $-7.0$ & $-6.0$ & $-4.0$ & $-6.7$ & $+2.9$ & $+6.3$ & $+2.8$ & $+4.7$ & $-1.7$ & $-3.4$ & $-1.4$ & $-2.6$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+
+% Table 2: Capital and Prices
+\begin{tabular}{l|cccc|cccc|cccc}
+\toprule
+& \multicolumn{4}{c|}{\textcolor{blue}{$r$}} 
+& \multicolumn{4}{c|}{\textcolor{blue}{$K$}} 
+& \multicolumn{4}{c}{\textcolor{blue}{$p$}} \\
+& M1 & M2 & M3 & M4 & M1 & M2 & M3 & M4 & M1 & M2 & M3 & M4 \\
+\midrule
+$\beta=2$ & 4.17\% & 3.99\% & 3.76\% & 3.65\% & 4.02 & 3.86 & 4.25 & 4.80 & 1.018 & 1.007 & 0.961 & 1.010 \\
+$\beta=3$ & 4.17\% & 4.08\% & 3.76\% & 3.68\% & 3.95 & 3.99 & 4.25 & 4.73 & 1.028 & 1.025 & 0.969 & 1.024 \\
+$\Delta\%$ & $0.00$ & $+0.09$ & $-0.00$ & $+0.03$ & $-2.0$ & $+3.4$ & $-0.0$ & $-1.4$ & $+1.0$ & $+1.8$ & $+0.8$ & $+1.4$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+
+% Table 3: Welfare and Inequality
+\begin{tabular}{l|cccc|cccc|cccc}
+\toprule
+& \multicolumn{4}{c|}{\textcolor{blue}{$U^L$}} 
+& \multicolumn{4}{c|}{\textcolor{blue}{$U^H$}} 
+& \multicolumn{4}{c}{\textcolor{blue}{$\text{Gini}$}} \\
+& M1 & M2 & M3 & M4 & M1 & M2 & M3 & M4 & M1 & M2 & M3 & M4 \\
+\midrule
+$\beta=2$ & -78.2 & -59.9 & -100.4 & -57.8 & -47.7 & -57.0 & -43.3 & -55.2 & 0.111 & 0.141 & 0.284 & 0.205 \\
+$\beta=3$ & -76.5 & -59.4 & -97.9 & -58.1 & -48.8 & -57.0 & -44.1 & -55.7 & 0.101 & 0.122 & 0.276 & 0.197 \\
+$\Delta\%$ & $+2.2$ & $+0.8$ & $+2.5$ & $-0.5$ & $-2.4$ & $-0.0$ & $-1.7$ & $-1.1$ & $-8.5$ & $-13.2$ & $-2.9$ & $-3.8$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5cm}
+
+There is much to discuss with the model and results we have so far. Here, I focus on a puzzle in the table above. For most models, $K$ decreases as $\beta$ increases, something expected as higher $\beta$ reduces the efficiency of our economy. The only exception is $M2$. This result is surprising in light of what precautionary savings theory would predict. Recall that in $M2$ there are only two states: low-skilled and high-skilled. Precautionary savings theory holds that households save in the good state ($H$) to smooth consumption in the bad state ($L$). In $M2$, a smaller wage gap implies a smaller gap between the good and bad states, so we would expect precautionary savings to \textit{fall}, and thus capital stock to fall as well. How, then, can we explain that capital stock \textit{increases}?
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\linewidth]{outputs/policy_diff_M2.pdf}
+    \caption{Changes in Savings Policy Function: $\beta=3$ vs $\beta=2$ in Model 2}
+    \label{fig:policy_diff_M2}
+\end{figure}
+
+To answer this question, we first examine the policy functions. In $M2$ there are two policy functions: one in state $L$ and one in state $H$. Figure~\ref{fig:policy_diff_M2} shows the difference in policy functions (how much savings policy changes with $\beta:2\rightarrow3$) in each state. The upper panel confirms our initial suspicion: as the ``bad'' state becomes less severe, the savings policy function shifts down, meaning that for each asset level $a$, the next period level $a'$ is lower. We call this the \textit{precautionary savings} effect, which tends to decrease capital stock. The lower panel, however, reveals what is driving the increase in $K$ in $M2$: both asset distributions shift to the right. This raises a further question: why is this happening, and how can agents be saving more even in the state that is getting worse ($H$)? 
+
+To understand the mechanism behind the shift in the wealth distribution, we analyse the dynamics of asset accumulation following adverse skill transitions. We claim that the shift is explained by the fact that, given higher earnings in the ``bad'' state, households do not need to draw down their savings as quickly as when $\beta=2$ in order to smooth consumption. We call this the \textit{disbursement} effect, which tends to increase capital stock, compensating the negative precautionary savings effect. To test this hypothesis, we simulate a panel of households and track asset accumulation for agents experiencing a transition from high- to low-skill status, expecting that households which just suffered a negative shock will dis-save more slowly.
+
+This is precisely what Figure~\ref{fig:event_study_HL_M2} shows. After simulating 50,000 households for 500 periods, we perform an event study tracking the savings trajectories of households that fall from $H$ to $L$ for at least 5 periods. The figure reports median savings before and after the shock at $t=0$, along with the 25th--75th percentile band. As claimed, with $\beta=3$ households draw down their savings more slowly after the shock, since the bad state ($L$) is less severe. Note that we restrict households to remain in $L$ for only 5 periods; thereafter they may transition back to $H$, and so on.
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\linewidth]{outputs/event_study_HL_M2.pdf}
+    \caption{Event Study: Asset Recovery after $H\rightarrow L$ Transition in Model 2}
+    \label{fig:event_study_HL_M2}
+\end{figure}
+
+These results suggest that the puzzle of rising $K$ in $M2$ can be explained as follows: a ``better bad state'' ($L$) reduces the incentive for precautionary savings (as documented by the policy functions), but it also means that households in the bad state do not need to draw down their savings as quickly to maintain the same consumption pattern, what we have called the disbursement effect. This pattern does not emerge in $M3$ and $M4$ because those models introduce idiosyncratic productivity shocks. In $M2$ it is straightforward to recognise that the bad state is better; in $M3$ and $M4$, productivity shocks mean that a household's welfare depends not only on its skill type but also on its individual productivity and transition probabilities. Thus, the precautionary savings effect dominates the disbursement effect, and capital stock decreases as expected.
+
+
+
+\vspace{-0.6cm}
+\section{Conclusion}
+\vspace{-0.3cm}
+
+We developed a model to understand the distributional consequences of reducing offshoring, and estimated it for a set of parameters to study how factor remunerations, prices, utility, and inequality respond to higher offshoring costs. In the full model, we find that even though the wage gap and inequality fall (as the narrative suggests), utility decreases as a consequence of a less efficient economy. To understand the mechanisms behind these results, we built the model incrementally, from a representative-agent baseline to the full model, introducing different shocks in the intermediate models ($M2$ and $M3$).
+
+In this paper, we focused on an apparent puzzle in $M2$: why is it the only model where capital stock increases? This puzzle is compounded by the expectation that precautionary savings incentives should fall. We showed that this suspicion is correct, but it is not the only effect at play: a better bad state also means that households falling into it do not need to draw down their savings as quickly as before.
+
+Naturally, given the scope of this paper, many questions and exercises remain. For example, to further isolate the disbursement effect, one could use the policy function from $\beta=2$ with the wages from $\beta=3$, thereby shutting down the precautionary savings effect. Beyond this puzzle, future work should calibrate the model with consistent parameters, conduct comparative statics with respect to $\beta$, and run simulations to study the transitional dynamics and underlying mechanisms.
+
+
+\newpage
+\appendix
+
+\bibliography{references}
+
+\section{Appendix}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.8\linewidth]{outputs/diagram.png}
+    \caption{Full Model Diagram}
+    \label{fig:diagram}
+\end{figure}
+
+% ---------------------------------------------------------
+% Parameter Tables – Estimation Models 1–4
+% ---------------------------------------------------------
+% Compile with:  pdflatex parameter_tables.tex
+% ---------------------------------------------------------
+
+
+% ======================================================
+%  Panel A – Model (Economic) Parameters
+% ======================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Model Parameters}
+\label{tab:model_parameters}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{clcccc}
+\toprule
+Parameter & Description & M1 & M2 & M3 & M4 \\
+\midrule
+\multicolumn{6}{l}{\textit{Production}} \\[2pt]
+$\alpha_x$  & High-skill labor share in sector $X$                        & 0.600 & 0.600 & 0.600 & 0.600 \\
+$\alpha_y$  & High-skill labor share in sector $Y$                        & 0.450 & 0.450 & 0.450 & 0.450 \\
+$\gamma$    & Capital share (both sectors)                                & 0.200 & 0.200 & 0.200 & 0.200 \\
+\midrule
+\multicolumn{6}{l}{\textit{Offshoring}} \\[2pt]
+$\beta$     & Offshoring cost shifter ($T_0 \to T_1$)                    & $2\!\to\!3$ & $2\!\to\!3$ & $2\!\to\!3$ & $2\!\to\!3$ \\
+$w^{*}$     & Foreign wage                                               & 0.650 & 0.650 & 0.650 & 0.650 \\
+$\theta$    & Offshoring cost elasticity; $t(i)=i^{\theta}$              & 0.500 & 0.500 & 0.500 & 0.500 \\
+\midrule
+\multicolumn{6}{l}{\textit{Preferences}} \\[2pt]
+$\eta$      & Expenditure share on good $X$ (Cobb--Douglas)              & 0.700 & 0.700 & 0.700 & 0.700 \\
+$\sigma$    & CRRA coefficient                                           & 2.000 & 2.000 & 2.000 & 2.000 \\
+$\delta$    & Discount factor                                            & 0.960 & 0.960 & 0.960 & 0.960 \\
+\midrule
+\multicolumn{6}{l}{\textit{Idiosyncratic shocks}} \\[2pt]
+$\rho$      & AR(1) persistence of $\ln z$                               & 0.900 & 0.900 & 0.900 & 0.900 \\
+$\sigma_\epsilon$ & Std.\ dev.\ of innovation to $\ln z$                 & 0.150 & 0.150 & 0.150 & 0.150 \\
+$\pi_{LL}$  & Prob.\ of remaining low-skill ($L \to L$)                  & 0.700 & 0.700 & \textbf{1.000} & 0.700 \\
+$\pi_{HH}$  & Prob.\ of remaining high-skill ($H \to H$)                & 0.800 & 0.800 & \textbf{1.000} & 0.800 \\
+\midrule
+\multicolumn{6}{l}{\textit{Aggregation}} \\[2pt]
+$M$         & Mass of households                                         & 1.000 & 1.000 & 1.000 & 1.000 \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\begin{minipage}{0.92\textwidth}\footnotesize
+\textit{Notes.} In all four models the offshoring cost shifter moves from $\beta=2$ (pre-shock, $T_0$) to $\beta=3$ (post-shock, $T_1$). Bold entries mark values that differ across models. M3 sets $\pi_{LL}=\pi_{HH}=1$ (absorbing skill states, i.e.\ no skill-type transitions).
+\end{minipage}
+\end{table}
+
+\clearpage
+
+% ======================================================
+%  Panel B – Calibration / Numerical Parameters
+% ======================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Calibration and Numerical Parameters}
+\label{tab:calib_parameters}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{clcccc}
+\toprule
+Parameter & Description & M1 & M2 & M3 & M4 \\
+\midrule
+\multicolumn{6}{l}{\textit{Rouwenhorst discretization of $\ln z$}} \\[2pt]
+\texttt{rh\_N}   & Number of grid points                                     & \textbf{1} & \textbf{1} & \textbf{7} & \textbf{7} \\
+\texttt{rh\_r}   & Range in std.\ deviations                                & 2     & 2     & 2     & 2     \\
+\texttt{rh\_c}   & Intercept of the AR(1) process                            & 0     & 0     & 0     & 0     \\
+\midrule
+\multicolumn{6}{l}{\textit{Supply-side equilibrium}} \\[2pt]
+\texttt{sup\_side\_eq\_eps} & Tolerance for MT/ZPC system                    & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ \\
+\midrule
+\multicolumn{6}{l}{\textit{Value Function Iteration}} \\[2pt]
+\texttt{vfi\_lb}           & Asset grid lower bound                         & 0     & 0     & 0     & 0     \\
+\texttt{vfi\_ubmul}        & Asset grid upper bound multiplier               & 15    & 15    & 15    & 15    \\
+\texttt{vfi\_N}            & Number of asset grid points                     & 500   & 500   & 500   & 500   \\
+\texttt{vfi\_eps}          & Convergence tolerance                           & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ \\
+\texttt{vfi\_howard\_steps}& Howard improvement steps per iteration          & 20    & 20    & 20    & 20    \\
+\midrule
+\multicolumn{6}{l}{\textit{Market clearing}} \\[2pt]
+\texttt{gmc\_eps}  & Labor market clearing tolerance                          & $10^{-3}$ & $10^{-3}$ & $10^{-3}$ & $10^{-3}$ \\
+\texttt{kmc\_eps}  & Capital market clearing tolerance                        & $10^{-3}$ & $10^{-3}$ & $10^{-3}$ & $10^{-3}$ \\
+\midrule
+\multicolumn{6}{l}{\textit{Inner loop (goods-market price $p$)}} \\[2pt]
+\texttt{p\_init\_guess}    & Initial guess for $p$                           & 1     & 1     & 1     & 1     \\
+\texttt{inner\_loop\_eps}  & Convergence tolerance                           & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ \\
+\texttt{inner\_loop\_p\_lb}& Lower bound for $p$                             & 0.1   & 0.1   & 0.1   & 0.1   \\
+\texttt{inner\_loop\_p\_ub}& Upper bound for $p$                             & 1.2   & 1.2   & 1.2   & 1.2   \\
+\texttt{inner\_loop\_marg} & Margin for narrowing $p$ bounds                 & 0.3   & 0.3   & 0.3   & 0.3   \\
+\midrule
+\multicolumn{6}{l}{\textit{Outer loop (interest rate $r$)}} \\[2pt]
+\texttt{r\_init\_guess}    & Initial guess for $r$                           & 0.01  & 0.01  & 0.01  & 0.01  \\
+\texttt{outer\_loop\_eps}  & Convergence tolerance                           & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ & $10^{-5}$ \\
+\texttt{outer\_loop\_r\_lb}& Lower bound for $r$                             & 0.001 & 0.001 & 0.001 & 0.001 \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\begin{minipage}{0.92\textwidth}\footnotesize
+\textit{Notes.} Bold entries mark values that differ across models. M1 and M2 set \texttt{rh\_N}$\,=1$, which collapses the productivity grid to a single point (no idiosyncratic $z$ shocks). M3 and M4 use \texttt{rh\_N}$\,=7$ grid points. M1 is solved analytically via the representative household; M2--M4 are solved numerically via the nested inner/outer loop.
+\end{minipage}
+\end{table}
+
+\end{document}
