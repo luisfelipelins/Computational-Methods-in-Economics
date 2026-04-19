@@ -265,7 +265,6 @@ for col, (skill, title) in enumerate([('L', 'Low Skill'), ('H', 'High Skill')]):
 
 plt.tight_layout()
 plt.savefig(OUTPUTS / 'policy_diff_M2.pdf', dpi=150, bbox_inches='tight')
-plt.show()
 
 # Running the simulations to confirm hypothesis
 hh_count           = 50000
@@ -562,6 +561,3 @@ ax.legend(fontsize=10)
 ax.set_xlim(τ_axis[0], τ_axis[-1])
 plt.tight_layout()
 plt.savefig(OUTPUTS / 'event_study_HL_M2.pdf', dpi=150, bbox_inches='tight')
-plt.show()
-
-
