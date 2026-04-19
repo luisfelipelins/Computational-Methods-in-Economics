@@ -104,4 +104,35 @@ Defines the functions used in the `analysis.py`, such as the objective functions
 
 Performs the empirical analysis, as proposed in the description of this problem set.
 
+## Final Work
+
+In this final work, we estimate a general equilibrium quantitative model to study the redistibutive effects of increasing offshoring barriers (tariffs and institutional barriers). This final work is based on my thesis, whose main project can be found in the [following repository](https://github.com/luisfelipelins/The-Redistributive-Aspects-of-Trade-Barriers).
+
+After creating the virtual environment and installing the required packages in the `requirements.txt` file, the codes in this sub-repository should be runned in the following order:
+
+`config.py` $`\rightarrow`$ `estimation.py` $`\rightarrow`$ `analysis.py`
+
+A brief description of each code's purpose below:
+
+
+### `config.py`
+
+Sets up the full working directory for this problem set.
+
+### `functions.py`
+
+Defines the functions used in the GeneralEquilibriumModel methods.
+
+### `GeneralEquilibriumModel.py`
+
+Defines GeneralEquilibriumModel class, used to estimate the models and create economy statistics.
+
+### `estimation.py`
+
+Solves the GeneralEquilibriumModel objects proposed in the final work, and saves them for further analysis. May take a few hours to run.
+
+### `analysis.py`
+
+Performs the analysis analysis, generating outputs.
+
 
