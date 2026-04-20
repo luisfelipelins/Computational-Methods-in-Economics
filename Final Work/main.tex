@@ -227,7 +227,7 @@ With steps 2--4 completed, we verify market clearing for the initial guesses of 
 \section{Results}
 \vspace{-0.3cm}
 
-We begin by building up the model incrementally. Given two types of shocks and a numerical solution, it is easy to lose economic intuition behind the results. We therefore compare four models: (1) a representative-agent model (whose derivation is omitted here, but also relies on numerical methods to solve a system of equations); (2) a model with labour supply type shocks only; (3) a model with productivity shocks only; and (4) a model with both types of shocks.
+We begin by building up the model incrementally. Given two types of shocks and a numerical solution, it is easy to lose economic intuition behind the results. We therefore compare four models: (1) a representative-agent model (whose derivation is omitted here, but also relies on numerical methods to solve a system of equations); (2) a model with labour supply type shocks only; (3) a model with productivity shocks only; and (4) a model with both types of shocks. The estimation of these models are done in \ff{estimation.py}, where the 8 models (models 1 to 4, for $\beta=2$ and $\beta=3$) are estimated in parallel.
 
 The results are reported in the tables below. Overall, the results suggest that the narrative holds: the wage gap narrows, and income inequality (measured by the Gini index) decreases across all models, even though in M4 capital remuneration increases. However, in the full model, despite the more equal income distribution, the utility of both low- and high-skilled workers falls. The intuition is that $\beta$ is a technology parameter, so a higher $\beta$ implies a less efficient economy: even though inequality is lower, utility also reflects the decline in total output and the rise in price $p$. As a result, even if the reduction in inequality stems mainly from a narrower wage gap, welfare decreases in this economy.
 
@@ -285,7 +285,7 @@ There is much to discuss with the model and results we have so far. Here, I focu
 
 \begin{figure}[!htpb]
     \centering
-    \includegraphics[width=0.9\linewidth]{outputs/policy_diff_M2.pdf}
+    \includegraphics[width=0.9\linewidth]{Figures/policy_diff_M2.pdf}
     \caption{Changes in Savings Policy Function: $\beta=3$ vs $\beta=2$ in Model 2}
     \label{fig:policy_diff_M2}
 \end{figure}
@@ -298,7 +298,7 @@ This is precisely what Figure~\ref{fig:event_study_HL_M2} shows. After simulatin
 
 \begin{figure}[!htpb]
     \centering
-    \includegraphics[width=0.9\linewidth]{outputs/event_study_HL_M2.pdf}
+    \includegraphics[width=0.9\linewidth]{Figures/event_study_HL_M2.pdf}
     \caption{Event Study: Asset Recovery after $H\rightarrow L$ Transition in Model 2}
     \label{fig:event_study_HL_M2}
 \end{figure}
@@ -327,7 +327,7 @@ Naturally, given the scope of this paper, many questions and exercises remain. F
 
 \begin{figure}[!htpb]
     \centering
-    \includegraphics[width=0.8\linewidth]{outputs/diagram.png}
+    \includegraphics[width=0.8\linewidth]{Figures/diagram.png}
     \caption{Full Model Diagram}
     \label{fig:diagram}
 \end{figure}
